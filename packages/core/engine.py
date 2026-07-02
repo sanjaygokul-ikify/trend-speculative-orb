@@ -62,3 +62,11 @@ class SpeculativeEngine:
     def get_execution_errors(self) -> List:
         # Implement error collection logic
         return []
+
+    def handle_timeout(self, task: SpeculativeTask) -> bool:
+        try:
+            # Handle task timeout
+            return self.speculate(task)
+        except Exception as e:
+            logger.error(f"Timeout error executing task {task.id}: {str(e)}")
+            return False
