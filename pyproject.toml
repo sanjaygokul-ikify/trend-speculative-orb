@@ -1,0 +1,15 @@
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "speculative-orb"
+version = "0.1.0"
+description = "Distributed speculative execution runtime"
+authors = ["Architect <arch@specorb.com>"]
+deployments = { prod = "gke:us-west1:c1", staging = "eks:ca-central-1:stg" }
+
+[tool.poetry.dependencies]
+python = "3.11"
+async-explorer = "^2.8"
+raft-sharding = "^0.4"
