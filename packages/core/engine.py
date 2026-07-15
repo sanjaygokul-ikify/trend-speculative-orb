@@ -11,6 +11,7 @@ class SpeculativeEngine:
         self.validation_pipeline = validation_pipeline
         self.executed_tasks = {}
         self.current_task_id = 0
+        self.task_timeout: Dict[int, float] = {}
 
     def execute_task(self, task: SpeculativeTask) -> bool:
         try:
@@ -63,10 +64,18 @@ class SpeculativeEngine:
         # Implement error collection logic
         return []
 
-    def handle_timeout(self, task: SpeculativeTask) -> bool:
+    def handle_timeout(self, task: SpeculativeTask, timeout: float) -> bool:
         try:
             # Handle task timeout
-            return self.speculate(task)
+            if task.id in self.task_timeout:
+                if self.task_timeout[task.id] < timeout:
+                    return self.speculate(task)
+                else:
+                    logger.error(f"Task {task.id} timed out")
+                    return False
+            else:
+                self.task_timeout[task.id] = timeout
+                return self.speculate(task)
         except Exception as e:
             logger.error(f"Timeout error executing task {task.id}: {str(e)}")
             return False
